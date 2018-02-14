@@ -1,6 +1,6 @@
-Configure config/db.php file - databsae connection.
-Run php yii migrate/up first.
+1) *Configure config/db.php file - databsae connection.
+2) *Run php yii migrate/up first.
 
-Test on:
+**Test on:**
 
 web/frontend - frontend files on angularjs.
