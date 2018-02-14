@@ -1,0 +1,265 @@
+<!doctype html>
+<html ng-app="frontendApp">
+<head>
+    <script type="text/javascript" src="./vendor/bower-asset/angular/angular.min.js"></script>
+    <script type="text/javascript" src="./vendor/bower-asset/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="./vendor/bower-asset/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./vendor/bower-asset/moment/moment.js"></script>
+    <script type="text/javascript" src="./vendor/bower-asset/lodash/dist/lodash.js"></script>
+    <script type="text/javascript" src="./vendor/bower-asset/angular-bootstrap/ui-bootstrap.js"></script>
+    <script type="text/javascript" src="./vendor/bower-asset/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script type="text/javascript" src="./vendor/bower-asset/angular-bootstrap-datetimepicker/src/js/datetimepicker.js"></script>
+    <script type="text/javascript" src="./vendor/bower-asset/angular-bootstrap-datetimepicker/src/js/datetimepicker.templates.js"></script>
+    <script src="index.js"></script>
+    <link rel="stylesheet" href="./vendor/bower-asset/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./vendor/bower-asset/bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="./vendor/bower-asset/angular-bootstrap-datetimepicker/src/css/datetimepicker.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+<div class="container" ng-controller="DevelopersController as vm">
+    <div class="row margin-top-xl">
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">Developers</div>
+                <div class="panel-body">
+                    <table class="table table-striped" ng-if="developers.length > 0">
+                        <thead>
+                        <th>Id</th>
+                        <th>Created</th>
+                        <th>Name</th>
+                        <th>DOB</th>
+                        <th>Expirience</th>
+                        <th>Yii</th>
+                        <th>Yii2</th>
+                        <th>Laravel</th>
+                        <th>Symphony</th>
+                        <th>Zend</th>
+                        <th>Comment</th>
+                        <th width="50"></th>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="el in developers">
+                            <td>{{ el.id }}</td>
+                            <td>{{ el.created_at }}</td>
+                            <td>{{ el.name }}</td>
+                            <td>{{ el.dob }}</td>
+                            <td>{{ el.expirience }}</td>
+                            <td><input type="checkbox" ng-model="el.framework_yii" disabled ng-true-value=1 ng-false-value=0 /></td>
+                            <td><input type="checkbox" ng-model="el.framework_yii2" disabled ng-true-value=1 ng-false-value=0 /></td>
+                            <td><input type="checkbox" ng-model="el.framework_laravel" disabled ng-true-value=1 ng-false-value=0 /></td>
+                            <td><input type="checkbox" ng-model="el.framework_symphony" disabled ng-true-value=1 ng-false-value=0 /></td>
+                            <td><input type="checkbox" ng-model="el.framework_zend" disabled ng-true-value=1 ng-false-value=0 /></td>
+                            <td>{{ el.comment }}</td>
+                            <td><i class="glyphicon glyphicon-pencil" ng-click="edit(el.id)"></i> <i class="glyphicon glyphicon-trash" ng-click="delete(el.id)"></i></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p ng-show="developers.length === 0">No developers.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Operations</div>
+                <div class="panel-body">
+                    <uib-tabset active="currentTab">
+                        <uib-tab heading="Add Developer">
+                            <div class="panel-body">
+                                <form class="form-horizontal" name="vm.developer">
+                                    <div class="form-group" ng-class="{'has-error': vm.developer.name.$touched && vm.developer.name.$invalid || hasError('errorsAdd', 'name')}">
+                                        <label class="col-md-4 control-label">Name:</label>
+                                        <div class="col-md-7">
+                                            <input name="name" ng-model="vm.addDeveloper.name" type="text" class="form-control" placeholder="Name" required />
+                                            <span class="help-block">
+                                                <strong ng-show="vm.developer.name.$touched && vm.developer.name.$error.required && !hasError('errorsAdd', 'name')">Name is required!</strong>
+                                                <strong ng-show="hasError('errorsAdd', 'name')">{{ getError('errorsAdd', 'name') }}</strong>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" ng-class="{'has-error': vm.developer.dob.$touched && vm.developer.dob.$invalid || hasError('errorsAdd', 'dob')}">
+                                        <label class="col-md-4 control-label">DOB:</label>
+                                        <div class="col-md-7">
+                                            <div class="dropdown">
+                                                <a class="dropdown-toggle" id="dob" role="button" data-toggle="dropdown" data-target="#" href="#">
+                                                    <div class="input-group"><input name="dob" ng-model="vm.addDeveloper.dob" type="text" class="form-control" placeholder="DOB" required><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                    </div>
+                                                </a>
+                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                    <datetimepicker ng-model="vm.addDeveloper.dob" data-datetimepicker-config="{ dropdownSelector: '#dob', minView: 'day', modelType: 'YYYY-MM-DD' }" data-before-render="beforeRender($view, $dates)"/>
+                                                </ul>
+                                            </div>
+                                            <span class="help-block">
+                                                <strong ng-show="vm.developer.dob.$touched && vm.developer.dob.$error.required && !hasError('errorsAdd', 'dob')">DOB is required!</strong>
+                                                <strong ng-show="hasError('errorsAdd', 'dob')">{{ getError('errorsAdd', 'dob') }}</strong>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" ng-class="{'has-error': vm.developer.expirience.$touched && vm.developer.expirience.$invalid || hasError('errorsAdd', 'expirience')}">
+                                        <label class="col-md-4 control-label">Expirience:</label>
+                                        <div class="col-md-7">
+                                            <input name="expirience" ng-model="vm.addDeveloper.expirience" type="number" min="0" max="100" class="form-control" placeholder="Expirience" required />
+                                            <span class="help-block">
+                                                <strong ng-show="vm.developer.expirience.$touched && vm.developer.expirience.$error.required && !hasError('errorsAdd', 'expirience')">Expirience is required!</strong>
+                                                <strong ng-show="vm.developer.expirience.$touched && vm.developer.expirience.$error.max && !hasError('errorsAdd', 'expirience')">Expirience max limit is 100 years!</strong>
+                                                <strong ng-show="hasError('errorsAdd', 'expirience')">{{ getError('errorsAdd', 'expirience') }}</strong>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Yii:</label>
+                                        <div class="col-md-7">
+                                            <input type="checkbox" ng-model="vm.addDeveloper.framework_yii" ng-true-value=1 ng-false-value=0 />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Yii2:</label>
+                                        <div class="col-md-7">
+                                            <input type="checkbox" ng-model="vm.addDeveloper.framework_yii2" ng-true-value=1 ng-false-value=0 />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Laravel:</label>
+                                        <div class="col-md-7">
+                                            <input type="checkbox" ng-model="vm.addDeveloper.framework_laravel" ng-true-value=1 ng-false-value=0 />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Symphony:</label>
+                                        <div class="col-md-7">
+                                            <input type="checkbox" ng-model="vm.addDeveloper.framework_symphony" ng-true-value=1 ng-false-value=0 />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Zend:</label>
+                                        <div class="col-md-7">
+                                            <input type="checkbox" ng-model="vm.addDeveloper.framework_zend" ng-true-value=1 ng-false-value=0 />
+                                        </div>
+                                    </div>
+                                    <div class="form-group" ng-class="{'has-error': vm.developer.comment.$touched && vm.developer.comment.$invalid || hasError('errorsAdd', 'comment')}">
+                                        <label class="col-md-4 control-label">Comment:</label>
+                                        <div class="col-md-7">
+                                            <textarea name="comment" ng-model="vm.addDeveloper.comment" type="text" class="form-control" placeholder="Comment" required></textarea>
+                                            <span class="help-block">
+                                                <strong ng-show="vm.developer.comment.$touched && vm.developer.comment.$error.required && !hasError('errorsAdd', 'comment')">Comment is required!</strong>
+                                                <strong ng-show="hasError('errorsAdd', 'comment')">{{ getError('errorsAdd', 'comment') }}</strong>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label"></label>
+                                        <div class="col-md-7">
+                                            <button type="button" class="btn btn-primary" ng-click="post(vm.addDeveloper)">
+                                                Save
+                                            </button>
+                                            <button type="button" class="btn btn-danger pull-right" ng-click="resetAdd('addDeveloper', 'developer')">
+                                                Reset
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </uib-tab>
+                        <uib-tab heading="Edit Developer" ng-if="vm.editDeveloperUser">
+                            <div class="panel-body">
+                                <form class="form-horizontal" name="vm.editDeveloper">
+                                    <div class="form-group" ng-class="{'has-error': vm.editDeveloper.name.$touched && vm.editDeveloper.name.$invalid || hasError('errorsEdit', 'name')}">
+                                        <label class="col-md-4 control-label">Name:</label>
+                                        <div class="col-md-7">
+                                            <input name="name" ng-model="vm.editDeveloperArray.name" type="text" class="form-control" placeholder="Name" required />
+                                            <span class="help-block">
+                                                <strong ng-show="vm.editDeveloper.name.$touched && vm.editDeveloper.name.$error.required && !hasError('errorsEdit', 'name')">Name is required!</strong>
+                                                <strong ng-show="hasError('errorsEdit', 'name')">{{ getError('errorsEdit', 'name') }}</strong>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" ng-class="{'has-error': vm.editDeveloper.dob.$touched && vm.editDeveloper.dob.$invalid || hasError('errorsEdit', 'dob')}">
+                                        <label class="col-md-4 control-label">DOB:</label>
+                                        <div class="col-md-7">
+                                            <div class="dropdown">
+                                                <a class="dropdown-toggle" id="dob" role="button" data-toggle="dropdown" data-target="#" href="#">
+                                                    <div class="input-group"><input name="dob" ng-model="vm.editDeveloperArray.dob" type="text" class="form-control" placeholder="DOB" required><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                    </div>
+                                                </a>
+                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                    <datetimepicker ng-model="vm.editDeveloperArray.dob" data-datetimepicker-config="{ dropdownSelector: '#dob', minView: 'day', modelType: 'YYYY-MM-DD' }" data-before-render="beforeRender($view, $dates)"/>
+                                                </ul>
+                                            </div>
+                                            <span class="help-block">
+                                                <strong ng-show="vm.editDeveloper.dob.$touched && vm.editDeveloper.dob.$error.required && !hasError('errorsEdit', 'dob')">DOB is required!</strong>
+                                                <strong ng-show="hasError('errorsEdit', 'dob')">{{ getError('errorsEdit', 'dob') }}</strong>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" ng-class="{'has-error': vm.editDeveloper.expirience.$touched && vm.editDeveloper.expirience.$invalid || hasError('errorsEdit', 'expirience')}">
+                                        <label class="col-md-4 control-label">Expirience:</label>
+                                        <div class="col-md-7">
+                                            <input name="expirience" ng-model="vm.editDeveloperArray.expirience" type="number" min="0" max="100" class="form-control" placeholder="Expirience" required />
+                                            <span class="help-block">
+                                                <strong ng-show="vm.editDeveloper.expirience.$touched && vm.editDeveloper.expirience.$error.required && !hasError('errorsEdit', 'expirience')">Expirience is required!</strong>
+                                                <strong ng-show="vm.editDeveloper.expirience.$touched && vm.editDeveloper.expirience.$error.max && !hasError('errorsEdit', 'expirience')">Expirience max limit is 100 years!</strong>
+                                                <strong ng-show="hasError('errorsEdit', 'expirience')">{{ getError('errorsEdit', 'expirience') }}</strong>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Yii:</label>
+                                        <div class="col-md-7">
+                                            <input type="checkbox" ng-model="vm.editDeveloperArray.framework_yii" ng-true-value=1 ng-false-value=0 />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Yii2:</label>
+                                        <div class="col-md-7">
+                                            <input type="checkbox" ng-model="vm.editDeveloperArray.framework_yii2" ng-true-value=1 ng-false-value=0 />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Laravel:</label>
+                                        <div class="col-md-7">
+                                            <input type="checkbox" ng-model="vm.editDeveloperArray.framework_laravel" ng-true-value=1 ng-false-value=0 />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Symphony:</label>
+                                        <div class="col-md-7">
+                                            <input type="checkbox" ng-model="vm.editDeveloperArray.framework_symphony" ng-true-value=1 ng-false-value=0 />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Zend:</label>
+                                        <div class="col-md-7">
+                                            <input type="checkbox" ng-model="vm.editDeveloperArray.framework_zend" ng-true-value=1 ng-false-value=0 />
+                                        </div>
+                                    </div>
+                                    <div class="form-group" ng-class="{'has-error': vm.editDeveloper.comment.$touched && vm.editDeveloper.comment.$invalid || hasError('errorsEdit', 'comment')}">
+                                        <label class="col-md-4 control-label">Comment:</label>
+                                        <div class="col-md-7">
+                                            <textarea name="comment" ng-model="vm.editDeveloperArray.comment" type="text" class="form-control" placeholder="Comment" required></textarea>
+                                            <span class="help-block">
+                                                <strong ng-show="vm.editDeveloper.comment.$touched && vm.editDeveloper.comment.$error.required && !hasError('errorsEdit', 'comment')">Comment is required!</strong>
+                                                <strong ng-show="hasError('errorsEdit', 'comment')">{{ getError('errorsEdit', 'comment') }}</strong>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label"></label>
+                                        <div class="col-md-7">
+                                            <button type="button" class="btn btn-primary" ng-click="put(vm.editDeveloperUser.id, vm.editDeveloperArray)">
+                                                Save
+                                            </button>
+                                            <button type="button" class="btn btn-danger pull-right" ng-click="clear('editDeveloperArray', 'editDeveloper')">
+                                                Clear
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </uib-tab>
+                    </uib-tabset>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
